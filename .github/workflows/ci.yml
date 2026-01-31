@@ -1,0 +1,30 @@
+# Nom de l'automatisation tel qu'il apparaîtra dans l'onglet "Actions"
+name: CI Pipeline
+
+# Déclencheurs (Triggers) : quand est-ce que ce script doit s'exécuter ?
+on:
+  pull_request:
+    branches: [main] # S'exécute quand quelqu'un ouvre une PR vers main
+  push:
+    branches: [main] # S'exécute quand du code est fusionné (mergé) sur main
+
+# Liste des tâches à accomplir
+jobs:
+  test:
+    # On choisit l'ordinateur virtuel fourni par GitHub (Ubuntu est le plus courant)
+    runs-on: ubuntu-latest
+
+    steps:
+      # Étape 1 : Copier le code du dépôt sur l'ordinateur virtuel
+      - name: Récupération du code (Checkout)
+        uses: actions/checkout@v4
+
+      # Étape 2 : Une action simple pour tester la console
+      - name: Diagnostic de l'environnement
+        run: echo "Le robot GitHub vérifie votre code sur une machine Ubuntu."
+
+      # Étape 3 : Simuler l'exécution de tests (ex: vérifier que les fichiers sont là)
+      - name: Simulation de tests
+        run: |
+          ls -la  # Liste les fichiers pour prouver que le checkout a marché
+          echo "Tous les tests sont au vert !"
