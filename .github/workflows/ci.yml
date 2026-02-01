@@ -1,0 +1,28 @@
+name: Recuperation Artefact JPetStore
+
+on: [push, pull_request]
+
+jobs:
+  construire:
+    runs-on: ubuntu-latest
+    steps:
+      - name: 1. Recuperer le code
+        uses: actions/checkout@v4
+
+      - name: 2. Installation de Java 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      - name: 3. Compilation Forcee
+        # On demande a Maven de chercher le pom.xml n'importe ou dans les dossiers
+        run: |
+          POM_PATH=$(find . -name "pom.xml" | head -n 1)
+          mvn clean package -DskipTests -f "$POM_PATH"
+
+      - name: 4. Sauvegarder le fichier .war
+        uses: actions/upload-artifact@v4
+        with:
+          name: jpetstore-build
+          path: "**/target/*.war"
