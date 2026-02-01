@@ -14,8 +14,18 @@
 #    limitations under the License.
 #
 
-FROM openjdk:17.0.2
-COPY . /usr/src/myapp
-WORKDIR /usr/src/myapp
-RUN ./mvnw clean package
-CMD ./mvnw cargo:run -P tomcat90
+# Étape 1 : Compilation
+FROM maven:3.8.4-openjdk-17-slim AS build
+WORKDIR /app
+# On copie tout ton projet dans le conteneur
+COPY . .
+# On lance la compilation à l'intérieur de Docker
+RUN mvn clean package -DskipTests
+
+# Étape 2 : Image finale
+FROM eclipse-temurin:17-jre-alpine
+WORKDIR /app
+# On récupère le fichier .war qui vient d'être créé à l'étape 1
+COPY --from=build /app/target/*.war app.war
+EXPOSE 8080
+ENTRYPOINT ["java", "-jar", "app.war"]
