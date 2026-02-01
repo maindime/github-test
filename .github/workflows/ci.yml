@@ -14,11 +14,10 @@ jobs:
         with:
           java-version: '17'
           distribution: 'temurin'
-          # On enlève le cache pour éviter l'erreur du pom.xml manquant ici
 
       - name: 3. Compilation (Génère le fichier .war)
-        # On force Maven à chercher le fichier pom.xml s'il est dans un dossier
-        run: mvn clean package -DskipTests
+        # On demande à Maven de scanner tous les dossiers pour trouver le pom.xml
+        run: mvn clean package -DskipTests -f **/pom.xml
 
       - name: 4. Sauvegarder l'artefact
         uses: actions/upload-artifact@v4
