@@ -28,3 +28,8 @@ jobs:
         run: |
           ls -la  # Liste les fichiers pour prouver que le checkout a marché
           echo "Tous les tests sont au vert !"
+      - name: 5. Sauvegarder le fichier compile
+        uses: actions/upload-artifact@v4
+        with:
+         name: jpetstore-war
+         path: target/*.war
